@@ -9,7 +9,7 @@ D_TOK = lexical_analyser
 D_SYN = syntax_error 
 
 SRCS = main.c \
-		 builtins/ft_env.c builtins/ft_echo.c builtins/ft_cd.c builtins/ft_pwd.c
+		 builtins/ft_env.c builtins/ft_echo.c builtins/ft_cd.c builtins/ft_pwd.c builtins/ft_export.c
 
 OBJS = $(SRCS:.c=.o)
 
@@ -21,7 +21,7 @@ $(NAME): $(OBJS) $(LIBFT)
 	$(CC) $(CFLAGS) $(OBJS) $(LIBFT) $(LDFLAGS) -o $(NAME)
 
 $(LIBFT):
-	$(MAKE) -C $(LIBFT_DIR)
+	$(MAKE) -C $(LIBFT_DIR) > /dev/null
 
 %.o: %.c
 	$(CC) $(CFLAGS) -c $< -o $@

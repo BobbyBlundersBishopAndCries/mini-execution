@@ -10,41 +10,51 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-
 #include "../exec.h"
 
-static char *get_target_path(char *path)
+static char	*back_home(void)
 {
-	char *home;
-    if (path == NULL || ft_strcmp(path, "~") == 0)
-    {
-		home = getenv("HOME");
-        if (!home)
-        {
-            ft_printf(STDERR_FILENO, "cd: HOME not set\n");
-            return (NULL);
-        }
-        else
-			return (ft_strdup(home));
-    }
+	char	*home;
+
+	home = getenv("HOME");
+	if (!home)
+	{
+		ft_printf(STDERR_FILENO, "bash: cd: HOME not set\n");
+		return (NULL);
+	}
+	return (ft_strdup(home));
+}
+
+static char	*get_target_path(int ac, char *path)
+{
+	if (ac == 1 || path == NULL || ft_strcmp(path, "~") == 0)
+		return (back_home());
 	return (ft_strdup(path));
 }
 
-int ft_cd(char *path)
+int	ft_cd(int ac, char **av)
 {
-    char *target_path;
+	char	*target_p;
 
-	if (path == NULL && ft_strcmp(path, ".") == 0)
-		return (0);
-	target_path = get_target_path(path);
-	if (!target_path)
-		return (-1);
-	if (chdir(target_path) == -1)
+	if (ac > 2)
 	{
-		ft_printf(STDERR_FILENO, "cd: %s: %s\n", target_path, strerror(errno));
-		free(target_path);
+		ft_printf(STDERR_FILENO, "bash: cd: too many arguments\n");
 		return (-1);
 	}
-	free(target_path);
+	if (ac == 2 && ft_strcmp(av[1], ".") == 0)
+		return (0);
+	if (ac == 1)
+		target_p = get_target_path(ac, NULL);
+	else
+		target_p = get_target_path(ac, av[1]);
+	if (!target_p)
+		return (-1);
+	if (chdir(target_p) == -1)
+	{
+		ft_printf(2, "bash: cd: %s: %s\n", target_p, strerror(errno));
+		free(target_p);
+		return (-1);
+	}
+	free(target_p);
 	return (0);
 }

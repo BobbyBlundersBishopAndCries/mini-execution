@@ -1,13 +1,9 @@
 #include "exec.h"
 
 
-int main(int argc, char **argv)
+int main(int ac, char **av)
 {
-    (void)argc;  // Unused parameter
-    (void)argv;  // Unused parameter
-
     // Call your ft_env function with the environment variables
-    int ret = ft_pwd();
-
-    return ret;
+    ft_cd(ac,av);
+    return 0;
 }

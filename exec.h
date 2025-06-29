@@ -9,12 +9,16 @@
 typedef struct s_env
 {
 	struct s_env	*next;
-	char	*valeur;
+	char	*whole;
 }		t_env;
 /* builtins */
-int 	ft_cd(char *path);
+int 	ft_cd(int ac, char **av);
 int 	ft_pwd(void);
 int		ft_echo(char **av);
-t_env	*create_list(char **env);
 int		ft_env(char **env);
+int 	ft_export(char **env, char **av);
+// t_env utils //
+t_env	*create_list(char **env);
+int		addback_node(t_env **head, char *av);
+void	free_env_list(t_env *head);
 #endif

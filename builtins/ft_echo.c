@@ -15,6 +15,7 @@
 static int	arg_count(char **av)
 {
 	int	count;
+
 	count = 0;
 	while (NULL != av[count])
 		count++;
@@ -24,15 +25,12 @@ static int	arg_count(char **av)
 int	ft_echo(char **av)
 {
 	int	i;
-	int option;
-	
+	int	option;
+
 	i = 1;
 	option = 0;
 	if (arg_count(av) == 1)
-	{
-		ft_printf(STDOUT_FILENO, "\n");
-		return (0);
-	}
+		return (ft_printf(STDOUT_FILENO, "\n"));
 	if (arg_count(av) > 1)
 	{
 		if (ft_strcmp(av[i], "-n") == 0)
@@ -40,7 +38,7 @@ int	ft_echo(char **av)
 			option = 1;
 			i++;
 		}
-		while(av[i] != NULL)
+		while (av[i] != NULL)
 		{
 			ft_printf(STDOUT_FILENO, "%s", av[i]);
 			if (av[i + 1] != NULL)
