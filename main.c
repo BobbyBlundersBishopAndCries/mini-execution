@@ -1,9 +1,9 @@
 #include "exec.h"
 
 
-int main(int ac, char **av)
+int main(int ac, char **av, char **env)
 {
-    // Call your ft_env function with the environment variables
-    ft_cd(ac,av);
+    ft_export(ac,env,av);
+
     return 0;
 }

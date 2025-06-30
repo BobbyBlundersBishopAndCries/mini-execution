@@ -3,45 +3,34 @@
 /*                                                        :::      ::::::::   */
 /*   ft_env.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mohabid <mohabid@student.42.fr>            +#+  +:+       +#+        */
+/*   By: med <med@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/28 21:30:13 by mohabid           #+#    #+#             */
-/*   Updated: 2025/06/29 03:00:06 by mohabid          ###   ########.fr       */
+/*   Updated: 2025/06/30 05:12:51 by med              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../exec.h"
 
-static t_env	*create_env_node(char *whole)
+t_env	*create_env_node(char *arg)
 {
 	t_env	*node;
 
-	if (!whole)
+	if (!arg)
 		return (NULL);
 	node = malloc(sizeof(t_env));
-	if (!node || !whole)
+	if (!node)
 		return (NULL);
 	node->next = NULL;
-	node->whole = ft_strdup(whole);
+	node->whole = ft_strdup(arg);
+	node->key = dup_key(arg);
+	node->value = dup_value(arg);
 	if (!node->whole)
 	{
 		free(node);
 		return (NULL);
 	}
 	return (node);
-}
-
-void	free_env_list(t_env *head)
-{
-	t_env	*tmp;
-
-	while (head)
-	{
-		tmp = head;
-		head = head->next;
-		free(tmp->whole);
-		free(tmp);
-	}
 }
 
 int	addback_node(t_env **head, char *av)

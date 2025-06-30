@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_unset.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mohabid <mohabid@student.42.fr>            +#+  +:+       +#+        */
+/*   By: med <med@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/28 20:08:44 by mohabid           #+#    #+#             */
-/*   Updated: 2025/06/28 22:45:59 by mohabid          ###   ########.fr       */
+/*   Updated: 2025/06/30 07:21:25 by med              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,12 +15,40 @@
 static void	free_node(t_env *node)
 {
 	free(node->whole);
+	free(node->key);
+	free(node->value);
 	free(node);
 }
 
-static t_env	*compare(char *arg, char **env)
+static void	del_arg(t_env **head, t_env *arg)
 {
-	int	size;
+	t_env	*curr;
+	t_env	*previous;
+	
+	curr = (*head)->next;
+	previous = *head;
+	if (head == NULL || *head == NULL)
+		return ;
+	if (*head == arg)
+	{
+		*head = (*head)->next;
+		free_node(previous);
+		return ;
+	}
+	while (curr)
+	{
+		if (arg == curr)
+		{
+			previous->next = curr->next;
+			free_node(curr);
+			return ;
+		}
+		previous = curr;
+		curr = curr->next;
+	}
+}
+static t_env	*arg_to_unset(char *arg, char **env)
+{
 	t_env	*head;
 	t_env	*curr;
 	
@@ -28,39 +56,18 @@ static t_env	*compare(char *arg, char **env)
 		return (NULL);
 	head = create_list(env);
 	curr = head;
-	size = ft_strlen(arg);
 	while (curr)
 	{
-		if (strncmp(arg, curr->whole, size) == 0)
+		if (strcmp(arg, curr->key) == 0)
 			return (curr);
 		curr = curr->next;
 	}
 	return (NULL);
 }
 
-int	ft_unset(char **av, char **env)
+int	ft_unset(int ac, char **av, char **env)
 {
-	t_env	*head;
-	int		i;
-	t_env	*curr;
-	t_env	*tmp;
-	
-	head = create_list(env);
-	curr = head;
-	if (!head)
+	if (ac == 1)
 		return (0);
-	i = 1;
-	while (av[i])
-	{
-		if (compare(av[i], env) == head)
-		{
-			head = curr->next;
-			tmp = curr;
-			free_node(tmp);
-		}
-		else if (compare(av[i], env) == curr)
-		{
-			curr = curr
-		}
-	}
+	
 }

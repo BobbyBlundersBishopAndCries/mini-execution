@@ -3,22 +3,32 @@
 /*                                                        :::      ::::::::   */
 /*   ft_export.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mohabid <mohabid@student.42.fr>            +#+  +:+       +#+        */
+/*   By: med <med@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/26 19:54:21 by med               #+#    #+#             */
-/*   Updated: 2025/06/29 02:50:55 by mohabid          ###   ########.fr       */
+/*   Updated: 2025/06/30 05:19:53 by med              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../exec.h"
 
-static void	swap_strings(char **a, char **b)
+static void swap_env_nodes(t_env *a, t_env *b)
 {
-	char	*tmp;
+    char *tmp_key;
+    char *tmp_value;
+    char *tmp_whole;
 
-	tmp = *a;
-	*a = *b;
-	*b = tmp;
+    tmp_key = a->key;
+    a->key = b->key;
+    b->key = tmp_key;
+
+    tmp_value = a->value;
+    a->value = b->value;
+    b->value = tmp_value;
+
+    tmp_whole = a->whole;
+    a->whole = b->whole;
+    b->whole = tmp_whole;
 }
 
 static void	sort_list(t_env *head)
@@ -33,7 +43,7 @@ static void	sort_list(t_env *head)
 		while (curr2 != NULL)
 		{
 			if (ft_strcmp(curr->whole, curr2->whole) > 0)
-				swap_strings(&(curr->whole), &(curr2->whole));
+				swap_env_nodes(curr, curr2);
 			curr2 = curr2->next;
 		}
 		curr = curr->next;
@@ -62,20 +72,21 @@ static t_env	*add_arguments(char **env, char **av)
 	return (head);
 }
 
-int	ft_export(char **env, char **av)
+int	ft_export(int ac, char **env, char **av)
 {
-	t_env	*head;
+	t_env	*head;// hadi atwli static bach n updatiha as long as prog khdam 
 	t_env	*curr;
 
 	head = add_arguments(env, av);
-	if (!head)
-		return (0);
 	curr = head;
-	while (curr)
+	if (ac == 1)
 	{
-		ft_printf(STDOUT_FILENO, "declare -x %s\n", curr->whole);
-		curr = curr->next;
+		while (curr)
+		{
+			printf("declare -x %s=", curr->key);
+			printf("\"%s\"\n",curr->value);
+			curr = curr->next;
+		}
 	}
-	free_env_list(head);
 	return (0);
 }

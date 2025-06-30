@@ -9,8 +9,8 @@ D_TOK = lexical_analyser
 D_SYN = syntax_error 
 
 SRCS = main.c \
-		 builtins/ft_env.c builtins/ft_echo.c builtins/ft_cd.c builtins/ft_pwd.c builtins/ft_export.c
-
+		 builtins/ft_env.c builtins/ft_echo.c builtins/ft_cd.c builtins/ft_pwd.c \
+		 builtins/ft_export.c builtins/dup.c
 OBJS = $(SRCS:.c=.o)
 
 NAME = shellax
