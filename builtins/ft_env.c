@@ -6,7 +6,7 @@
 /*   By: med <med@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/28 21:30:13 by mohabid           #+#    #+#             */
-/*   Updated: 2025/06/30 05:12:51 by med              ###   ########.fr       */
+/*   Updated: 2025/06/30 17:31:07 by med              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,7 +77,7 @@ int	ft_env(char **env)
 	t_env	*curr;
 	t_env	*head;
 
-	head = create_list(env);
+	head = create_list(env); // needs to be static
 	curr = head;
 	if (!curr)
 		return (1);

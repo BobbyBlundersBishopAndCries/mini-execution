@@ -19,6 +19,8 @@ int 	ft_pwd(void);
 int		ft_echo(char **av);
 int		ft_env(char **env);
 int 	ft_export(int ac, char **env, char **av);
+int		ft_unset(int ac, char **av, char **env);
+int		ft_exit(int ac, char **args);
 // t_env utils //
 char	*dup_key(char *arg);
 char	*dup_value(char *arg);

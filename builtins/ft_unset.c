@@ -6,7 +6,7 @@
 /*   By: med <med@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/28 20:08:44 by mohabid           #+#    #+#             */
-/*   Updated: 2025/06/30 07:21:25 by med              ###   ########.fr       */
+/*   Updated: 2025/07/01 03:33:21 by med              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,54 +20,69 @@ static void	free_node(t_env *node)
 	free(node);
 }
 
-static void	del_arg(t_env **head, t_env *arg)
+static int del_arg(t_env **head, char *key)
 {
 	t_env	*curr;
 	t_env	*previous;
 	
-	curr = (*head)->next;
-	previous = *head;
-	if (head == NULL || *head == NULL)
-		return ;
-	if (*head == arg)
-	{
-		*head = (*head)->next;
-		free_node(previous);
-		return ;
-	}
+	curr = *head;
+	previous = NULL;
+	if (head == NULL || *head == NULL || !key)
+		return (0);
 	while (curr)
 	{
-		if (arg == curr)
+		if (ft_strcmp(key, curr->key) == 0)
 		{
-			previous->next = curr->next;
+			if (previous)
+				previous->next = curr->next;
+			else
+				*head = (*head)->next;
 			free_node(curr);
-			return ;
+			return (1);
 		}
 		previous = curr;
 		curr = curr->next;
 	}
+	return (0);
 }
-static t_env	*arg_to_unset(char *arg, char **env)
+
+static int is_valid_identifier(char *name)
 {
-	t_env	*head;
-	t_env	*curr;
-	
-	if (env == NULL || *env == NULL || arg == NULL)
-		return (NULL);
-	head = create_list(env);
-	curr = head;
-	while (curr)
-	{
-		if (strcmp(arg, curr->key) == 0)
-			return (curr);
-		curr = curr->next;
-	}
-	return (NULL);
+	int	i;
+
+	i = 1;
+    if (!(ft_isalpha((unsigned char)name[0]) || name[0] == '_'))
+        return (0);
+    while (name[i])
+    {
+		if (!(ft_isalnum((unsigned char)name[i]) || name[i] == '_'))
+			return 0;
+		i++;
+    }
+    return 1;
 }
 
 int	ft_unset(int ac, char **av, char **env)
 {
+	int		i;
+	t_env	*head; //needs to be static
+	
 	if (ac == 1)
 		return (0);
-	
+	head = create_list(env);
+	if (!head)
+		return (1);
+	i = 1;
+	while (av[i])
+	{
+		if (!is_valid_identifier(av[i]))
+		{
+			ft_printf(2, "bash: unset `%s\': not a valid identifier\n", av[i]);
+			return (1);
+		}
+		if (!del_arg(&head, av[i]))
+			return (1);
+		i++;
+	}
+	return (0);
 }
