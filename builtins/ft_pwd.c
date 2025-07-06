@@ -3,14 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   ft_pwd.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mohabid <mohabid@student.42.fr>            +#+  +:+       +#+        */
+/*   By: med <med@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/29 02:51:34 by mohabid           #+#    #+#             */
-/*   Updated: 2025/06/29 02:52:07 by mohabid          ###   ########.fr       */
+/*   Updated: 2025/07/06 07:53:30 by med              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../exec.h"
+#include "../minishell.h"
 
 int	ft_pwd(void)
 {
@@ -20,9 +20,9 @@ int	ft_pwd(void)
 	if (!abs_path)
 	{
 		ft_printf(STDERR_FILENO, "pwd: %s\n", strerror(errno));
-		return (1);
+		return (EXIT_FAILURE);
 	}
 	ft_printf(STDOUT_FILENO, "%s\n", abs_path);
 	free(abs_path);
-	return (0);
+	return (EXIT_SUCCESS); 
 }

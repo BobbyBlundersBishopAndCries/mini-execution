@@ -1,60 +1,48 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   cd.c                                               :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/06/24 16:48:00 by marvin            #+#    #+#             */
-/*   Updated: 2025/06/24 16:48:00 by marvin           ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
+#include "../minishell.h"
 
-#include "../exec.h"
-
-static char	*back_home(void)
+int arg_count(char **av)
 {
-	char	*home;
-
-	home = getenv("HOME");
-	if (!home)
+	int	count;
+	int	i;
+	
+	i = 0;
+	count = 0;
+	while (av[i])
 	{
-		ft_printf(STDERR_FILENO, "bash: cd: HOME not set\n");
-		return (NULL);
+		count++;
+		i++;
 	}
-	return (ft_strdup(home));
+	return (count);
 }
 
-static char	*get_target_path(int ac, char *path)
+static void update_pwd_vars(t_env *env, char *oldpwd, char *pwd)
 {
-	if (ac == 1 || path == NULL || ft_strcmp(path, "~") == 0)
-		return (back_home());
-	return (ft_strdup(path));
+	if (oldpwd)
+		update_val(env, "OLDPWD", oldpwd);
+	if (pwd)
+		update_val(env, "PWD", pwd);
+	free(oldpwd);
+	free(pwd);
 }
 
-int	ft_cd(int ac, char **av)
+int	ft_cd(t_cmd *cmd)
 {
-	char	*target_p;
-
-	if (ac > 2)
+	char	*oldpwd;
+	char	*pwd;
+	int		count;
+	
+	if (!cmd || !cmd->env || !(*cmd->env))
+		return (-1);
+	count = arg_count(cmd->args);
+	if (count > 2)
 	{
-		ft_printf(STDERR_FILENO, "bash: cd: too many arguments\n");
+		ft_printf(STDERR_FILENO, "cd: too many arguments\n");
 		return (-1);
 	}
-	if (ac == 2 && ft_strcmp(av[1], ".") == 0)
-		return (0);
-	if (ac == 1)
-		target_p = get_target_path(ac, NULL);
-	else
-		target_p = get_target_path(ac, av[1]);
-	if (!target_p)
+	oldpwd = getcwd(NULL, 0);
+	pwd = cd_to_path(cmd, oldpwd);
+	if (!pwd)
 		return (-1);
-	if (chdir(target_p) == -1)
-	{
-		ft_printf(2, "bash: cd: %s: %s\n", target_p, strerror(errno));
-		free(target_p);
-		return (-1);
-	}
-	free(target_p);
+	update_pwd_vars(*cmd->env, oldpwd, pwd);
 	return (0);
 }

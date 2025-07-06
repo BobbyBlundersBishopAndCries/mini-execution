@@ -6,17 +6,17 @@
 /*   By: med <med@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/28 20:08:44 by mohabid           #+#    #+#             */
-/*   Updated: 2025/07/01 03:33:21 by med              ###   ########.fr       */
+/*   Updated: 2025/07/06 11:35:58 by med              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../exec.h"
+#include "../minishell.h"
 
 static void	free_node(t_env *node)
 {
-	free(node->whole);
 	free(node->key);
-	free(node->value);
+	if (node->value)
+		free(node->value);
 	free(node);
 }
 
@@ -46,42 +46,25 @@ static int del_arg(t_env **head, char *key)
 	return (0);
 }
 
-static int is_valid_identifier(char *name)
-{
-	int	i;
-
-	i = 1;
-    if (!(ft_isalpha((unsigned char)name[0]) || name[0] == '_'))
-        return (0);
-    while (name[i])
-    {
-		if (!(ft_isalnum((unsigned char)name[i]) || name[i] == '_'))
-			return 0;
-		i++;
-    }
-    return 1;
-}
-
-int	ft_unset(int ac, char **av, char **env)
+int	ft_unset(t_cmd *cmd)
 {
 	int		i;
-	t_env	*head; //needs to be static
-	
+	int		ac;
+
+	if (!cmd || !cmd->env || !(*cmd->env))
+		return (1);
+	ac = arg_count(cmd->args);
 	if (ac == 1)
 		return (0);
-	head = create_list(env);
-	if (!head)
-		return (1);
 	i = 1;
-	while (av[i])
+	while (cmd->args[i])
 	{
-		if (!is_valid_identifier(av[i]))
+		if (!is_valid_identifier(cmd->args[i]))
 		{
-			ft_printf(2, "bash: unset `%s\': not a valid identifier\n", av[i]);
+			ft_printf(2, "bash: unset `%s\': not a valid identifier\n", cmd->args[i]);
 			return (1);
 		}
-		if (!del_arg(&head, av[i]))
-			return (1);
+		del_arg(cmd->env, cmd->args[i]);
 		i++;
 	}
 	return (0);

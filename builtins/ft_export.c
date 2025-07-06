@@ -6,43 +6,37 @@
 /*   By: med <med@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/26 19:54:21 by med               #+#    #+#             */
-/*   Updated: 2025/06/30 05:19:53 by med              ###   ########.fr       */
+/*   Updated: 2025/07/06 11:20:10 by med              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../exec.h"
+#include "../minishell.h"
 
-static void swap_env_nodes(t_env *a, t_env *b)
+static void	swap_env_nodes(t_env *a, t_env *b)
 {
-    char *tmp_key;
-    char *tmp_value;
-    char *tmp_whole;
-
-    tmp_key = a->key;
-    a->key = b->key;
-    b->key = tmp_key;
-
-    tmp_value = a->value;
-    a->value = b->value;
-    b->value = tmp_value;
-
-    tmp_whole = a->whole;
-    a->whole = b->whole;
-    b->whole = tmp_whole;
+	char *tmp_key;
+	char *tmp_value;
+	
+	tmp_key = a->key;
+	tmp_value = a->value;
+	a->key = b->key;
+	a->value = b->value;
+	b->key = tmp_key;
+	b->value = tmp_value;
 }
 
 static void	sort_list(t_env *head)
 {
-	t_env	*curr;
-	t_env	*curr2;
-
+	t_env *curr;
+	t_env *curr2;
+	
 	curr = head;
-	while (curr != NULL)
+	while (curr)
 	{
 		curr2 = curr->next;
-		while (curr2 != NULL)
+		while (curr2)
 		{
-			if (ft_strcmp(curr->whole, curr2->whole) > 0)
+			if (ft_strcmp(curr->key, curr2->key) > 0)
 				swap_env_nodes(curr, curr2);
 			curr2 = curr2->next;
 		}
@@ -50,43 +44,47 @@ static void	sort_list(t_env *head)
 	}
 }
 
-static t_env	*add_arguments(char **env, char **av)
+static void	add_export_arg(t_env **env, char *arg)
 {
-	int		i;
-	t_env	*head;
-
-	head = create_list(env);
-	if (!head)
-		return (NULL);
-	i = 0;
-	while (av[i] != NULL)
+	if (!is_valid_identifier(arg))
 	{
-		if (addback_node(&head, av[i]) == 1)
-		{
-			free_env_list(head);
-			return (NULL);
-		}
-		sort_list(head);
-		i++;
+		ft_printf(STDERR_FILENO, "minishell: export: `%s`: not a valid identifier\n", arg);
+		return ;
 	}
-	return (head);
+	addback_node(env, arg);
+	sort_list(*env);
 }
 
-int	ft_export(int ac, char **env, char **av)
+static void	export_with_args(t_cmd *cmd)
 {
-	t_env	*head;// hadi atwli static bach n updatiha as long as prog khdam 
-	t_env	*curr;
-
-	head = add_arguments(env, av);
-	curr = head;
-	if (ac == 1)
+	int i = 1;
+	while (cmd->args[i])
 	{
+		add_export_arg(cmd->env, cmd->args[i]);
+		i++;
+	}
+}
+
+int	ft_export(t_cmd *cmd)
+{
+	t_env *curr;
+
+	if (!cmd || !cmd->env || !(*cmd->env))
+		return (1);
+	if (arg_count(cmd->args) == 1)
+	{
+		sort_list(*cmd->env);
+		curr = *cmd->env;
 		while (curr)
 		{
-			printf("declare -x %s=", curr->key);
-			printf("\"%s\"\n",curr->value);
+			printf("declare -x %s", curr->key);
+			if (curr->value)
+				printf("=\"%s\"", curr->value);
+			printf("\n");
 			curr = curr->next;
 		}
 	}
+	else
+		export_with_args(cmd);
 	return (0);
 }

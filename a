@@ -1,0 +1,3 @@
+1:CC     = cc
+45:	$(CC) $(CFLAGS) $(OBJS) $(LIBFT) $(LDFLAGS) -o $(NAME)
+51:	$(CC) $(CFLAGS) -c $< -o $@

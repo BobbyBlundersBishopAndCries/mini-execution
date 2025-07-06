@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_strjoin.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: feedback <feedback@student.42.fr>          +#+  +:+       +#+        */
+/*   By: med <med@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/23 18:42:02 by mohabid           #+#    #+#             */
-/*   Updated: 2025/06/24 21:38:43 by feedback         ###   ########.fr       */
+/*   Updated: 2025/07/06 15:05:59 by med              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,6 @@ char	*ft_strjoin(const char *s1, const char *s2)
 	i = 0;
 	while (*s1)
 		joined[i++] = *s1++;
-	joined[i++] = ' ';
 	while (*s2)
 		joined[i++] = *s2++;
 	joined[i] = '\0';

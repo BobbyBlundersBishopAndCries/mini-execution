@@ -6,11 +6,11 @@
 /*   By: med <med@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/01 03:35:36 by med               #+#    #+#             */
-/*   Updated: 2025/07/01 04:23:35 by med              ###   ########.fr       */
+/*   Updated: 2025/07/06 09:38:45 by med              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../exec.h"
+#include "../minishell.h"
 
 static int	is_valid_number(const char *str)
 {
@@ -37,21 +37,23 @@ static void	valid_error(char *arg)
 	exit(2);
 }
 
-int	ft_exit(int ac, char **av)
+int	ft_exit(t_cmd *cmd)
 {
 	int	exit_status;
-	
+	int	count;
+
+	count = arg_count(cmd->args);
 	exit_status = 0;
-	if (av[1])
+	if (count > 2)
 	{
-		if (!is_valid_number(av[1]))
-			valid_error(av[1]);
-		exit_status = ft_atoi(av[1]);
-		if (ac > 2)
-		{
-			ft_printf(2, "exit\nbash: exit: too many arguments\n");
-			return (1);
-		}
+		ft_printf(2, "exit\nbash: exit: too many arguments\n");
+		return (1);
+	}
+	if (cmd->args[1])
+	{
+		if (!is_valid_number(cmd->args[1]))
+			valid_error(cmd->args[1]);
+		exit_status = ft_atoi(cmd->args[1]);
     }
 	exit(exit_status);
 }

@@ -10,38 +10,44 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../exec.h"
+#include "../minishell.h"
 
-static int	arg_count(char **av)
+int check(char *str)
 {
-	int	count;
+	int i;
 
-	count = 0;
-	while (NULL != av[count])
-		count++;
-	return (count);
+	i = 0;
+	if(!str[i])
+		return 0;
+	if(str[i] == '-')
+		i++;
+	while(str[i] == 'n')
+		i++;
+	if(!str[i])
+		return 1;
+	return 0;
 }
 
-int	ft_echo(char **av)
+int	ft_echo(t_cmd *cmd)
 {
 	int	i;
 	int	option;
 
 	i = 1;
 	option = 0;
-	if (arg_count(av) == 1)
+	if (arg_count(cmd->args) == 1)
 		return (ft_printf(STDOUT_FILENO, "\n"));
-	if (arg_count(av) > 1)
+	if (arg_count(cmd->args) > 1)
 	{
-		if (ft_strcmp(av[i], "-n") == 0)
+		while (ft_strcmp(cmd->args[i], "-n") == 0 || check(cmd->args[i]))
 		{
 			option = 1;
 			i++;
 		}
-		while (av[i] != NULL)
+		while (cmd->args[i] != NULL)
 		{
-			ft_printf(STDOUT_FILENO, "%s", av[i]);
-			if (av[i + 1] != NULL)
+			ft_printf(STDOUT_FILENO, "%s", cmd->args[i]);
+			if (cmd->args[i + 1] != NULL)
 				ft_printf(STDOUT_FILENO, " ");
 			i++;
 		}
