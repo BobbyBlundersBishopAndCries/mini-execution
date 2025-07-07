@@ -6,7 +6,7 @@
 /*   By: med <med@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/30 14:38:27 by mlakhdar          #+#    #+#             */
-/*   Updated: 2025/07/07 11:44:11 by med              ###   ########.fr       */
+/*   Updated: 2025/07/07 19:11:41 by med              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -227,7 +227,8 @@ int	ft_unset(t_cmd *cmd);
 int		open_file(t_redir *redir, t_redirct mode);
 int 	redirect_fd(int fd, int std_fd);
 int 	setup_redirections(t_redir *list);
-void	handle_heredoc(t_redir *redird);
+int		handle_all_heredocs(t_cmd *cmd);
+int		handle_heredoc(t_redir *redir);
 void	close_redirs(t_redir *list);
 /* execute command */
 void	error(void);

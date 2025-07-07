@@ -22,11 +22,6 @@ static void	setup_pipe_and_fork(t_cmd *cmd, int prev_fd[2])
 	int		next_fd[2];
 	pid_t	pid;
 
-	// ✨ PRE-FORK: Handle heredocs first
-	if (cmd->files && cmd->files->index == R_HEREDOC)
-		handle_heredoc(cmd->files);  // Not in the child — prepare inputs
-
-	// Setup pipe if needed
 	if (cmd->next && pipe(next_fd) == -1)
 		error();
 
@@ -36,7 +31,6 @@ static void	setup_pipe_and_fork(t_cmd *cmd, int prev_fd[2])
 
 	if (pid == 0)
 	{
-		// STDIN from prev pipe
 		if (prev_fd[0] != -1)
 		{
 			dup2(prev_fd[0], STDIN_FILENO);
@@ -73,6 +67,9 @@ void	execute_pipeline(t_cmd *cmd)
 	int		prev_fd[2] = {-1, -1};
 	int		status;
 	t_cmd	*tmp = cmd;
+
+	if (handle_all_heredocs(cmd))
+		return;
 
 	while (tmp)
 	{

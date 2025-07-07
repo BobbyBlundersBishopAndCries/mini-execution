@@ -53,6 +53,8 @@ void	execute_command(t_cmd *cmd)
 	char	*p;
 	char	*to_befreed;
 
+	if (!cmd || !(cmd->args) || !(cmd->args[0]) || !cmd->args[0][0])
+		return ;
 	if (is_directory(cmd->args[0]))
     {
         ft_printf(2, "minishell: %s: Is a directory\n", cmd->args[0]);

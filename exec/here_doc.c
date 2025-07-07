@@ -37,16 +37,18 @@ void	write_to_pipe_from_redir(t_redir *redir, int pipe_fd[2])
 	close(pipe_fd[1]);
 }
 
-void	handle_heredoc(t_redir *redir)
+int	handle_heredoc(t_redir *redir)
 {
 	pid_t	id;
 	int		pipe_fd[2];
 
 	if (pipe(pipe_fd) == -1)
-		error();
+		return (1);  // Error
+
 	id = fork();
 	if (id < 0)
-		error();
+		return (1);
+
 	if (id == 0)
 	{
 		write_to_pipe_from_redir(redir, pipe_fd);
@@ -56,6 +58,29 @@ void	handle_heredoc(t_redir *redir)
 	{
 		close(pipe_fd[1]);  // Close write end in parent
 		waitpid(id, NULL, 0);
-		redir->fd = pipe_fd[0];  // Save the read end for future dup2
+		redir->fd = pipe_fd[0];  // Save the read end
 	}
+	return (0);  // Success
+}
+
+int	handle_all_heredocs(t_cmd *cmd)
+{
+	t_cmd *tmp = cmd;
+	t_redir *redir;
+
+	while (tmp)
+	{
+		redir = tmp->files;
+		while (redir)
+		{
+			if (redir->index == R_HEREDOC)
+			{
+				if (handle_heredoc(redir) != 0)
+					return (1);
+			}
+			redir = redir->next;
+		}
+		tmp = tmp->next;
+	}
+	return (0);
 }
