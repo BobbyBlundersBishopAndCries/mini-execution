@@ -6,7 +6,7 @@
 /*   By: med <med@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/30 14:38:27 by mlakhdar          #+#    #+#             */
-/*   Updated: 2025/07/06 17:37:49 by med              ###   ########.fr       */
+/*   Updated: 2025/07/07 11:44:11 by med              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,11 +26,12 @@
 # include <string.h>
 # include <signal.h>
 # include <errno.h>
-#include <sys/types.h>
-#include <sys/wait.h>
+# include <sys/types.h>
+# include <sys/wait.h>
+# include <sys/stat.h>
 # define READ_END 0
 # define WRITE_END 1
-
+extern int	g_exit_status;
 /* ─────────────────────────────────────────────────────────── */
 /*                       MEMORY MANAGER (GC)                   */
 /* ─────────────────────────────────────────────────────────── */
@@ -226,10 +227,12 @@ int	ft_unset(t_cmd *cmd);
 int		open_file(t_redir *redir, t_redirct mode);
 int 	redirect_fd(int fd, int std_fd);
 int 	setup_redirections(t_redir *list);
+void	handle_heredoc(t_redir *redird);
 void	close_redirs(t_redir *list);
 /* execute command */
+void	error(void);
 void	execute_command(t_cmd *cmd);
 void	execute_pipeline(t_cmd *cmd);
-
-
+/* signals */
+void handle_signals(void);
 #endif

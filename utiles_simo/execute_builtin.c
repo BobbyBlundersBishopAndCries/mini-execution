@@ -11,7 +11,9 @@ int	is_builtin(char *cmd)
 		ft_strcmp(cmd, "exit") == 0 ||
 		ft_strcmp(cmd, "export") == 0 ||
 		ft_strcmp(cmd, "pwd") == 0 ||
-		ft_strcmp(cmd, "unset") == 0
+		ft_strcmp(cmd, "unset") == 0 ||
+		ft_strcmp(cmd, ":") == 0 ||
+		ft_strcmp(cmd, "!") == 0
 	);
 }
 
@@ -69,6 +71,8 @@ int	execute_builtin(t_cmd *cmd)
 		status = ft_export(cmd);
 	else if (ft_strcmp(cmd->args[0], "unset") == 0)
 		status = ft_unset(cmd);
+	else if (ft_strcmp(cmd->args[0], ":") == 0)
+		status = 0;
 	else
 		return (1);
 	if (ft_strcmp(cmd->args[0], "export") == 0 || ft_strcmp(cmd->args[0], "unset") == 0)

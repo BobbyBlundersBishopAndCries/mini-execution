@@ -6,7 +6,7 @@
 /*   By: med <med@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/19 06:31:59 by mohabid           #+#    #+#             */
-/*   Updated: 2025/07/06 14:24:46 by med              ###   ########.fr       */
+/*   Updated: 2025/07/07 07:25:44 by med              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ static char	*update_buffer(char **buffer, char *temp)
 {
 	char	*new_buffer;
 
-	new_buffer = ft_strjoin(*buffer, temp);
+	new_buffer = ft_strjointwo(*buffer, temp);
 	free(*buffer);
 	*buffer = new_buffer;
 	return (*buffer);
@@ -44,7 +44,7 @@ static char	*read_to_buffer(int fd, char **buffer)
 {
 	char	*temp;
 
-	while (!ft_strchr(*buffer, '\n'))
+	while (!ft_strchrtwo(*buffer, '\n'))
 	{
 		temp = read_from_fd(fd);
 		if (!temp)

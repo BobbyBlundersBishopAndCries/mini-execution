@@ -33,7 +33,9 @@ SRCS = main.c \
 			builtins/ft_unset.c \
 			exec/execute_command.c \
 			exec/red.c \
-			exec/fork_process.c
+			exec/fork_process.c\
+			exec/here_doc.c\
+			exec/signal.c
 			
 OBJS = $(SRCS:.c=.o)
 

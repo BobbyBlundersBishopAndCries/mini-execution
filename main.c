@@ -1,8 +1,7 @@
 
 #include "minishell.h"
 
-int	g_exit_status = 0;
-
+int g_exit_status = 0;
 int	main(int argc, char **argv, char **envp)
 {
 	char		*input;
@@ -15,9 +14,13 @@ int	main(int argc, char **argv, char **envp)
 	envir = get_env(envp);
 	while (1)
 	{
+		handle_signals();
 		input = readline("\001\033[1;31m\002minishell:$ \001\033[0m\002");
 		if (!input)
+		{
+			write(1, "exit\n", ft_strlen("exit\n"));
 			break ;
+		}
 		if (*input)
 			add_history(input);
 		cmds = parsing(input, envir, &g_exit_status);
