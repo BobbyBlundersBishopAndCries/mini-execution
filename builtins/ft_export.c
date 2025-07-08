@@ -6,68 +6,80 @@
 /*   By: med <med@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/26 19:54:21 by med               #+#    #+#             */
-/*   Updated: 2025/07/06 11:20:10 by med              ###   ########.fr       */
+/*   Updated: 2025/07/08 15:24:42 by med              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-static void	swap_env_nodes(t_env *a, t_env *b)
+static t_env	*find_env_node(t_env *env, char *key)
 {
-	char *tmp_key;
-	char *tmp_value;
-	
-	tmp_key = a->key;
-	tmp_value = a->value;
-	a->key = b->key;
-	a->value = b->value;
-	b->key = tmp_key;
-	b->value = tmp_value;
-}
-
-static void	sort_list(t_env *head)
-{
-	t_env *curr;
-	t_env *curr2;
-	
-	curr = head;
-	while (curr)
+	while (env)
 	{
-		curr2 = curr->next;
-		while (curr2)
-		{
-			if (ft_strcmp(curr->key, curr2->key) > 0)
-				swap_env_nodes(curr, curr2);
-			curr2 = curr2->next;
-		}
-		curr = curr->next;
+		if (ft_strcmp(env->key, key) == 0)
+			return (env);
+		env = env->next;
 	}
+	return (NULL);
 }
 
-static void	add_export_arg(t_env **env, char *arg)
+static void	update_env_value(t_env *node, char *value)
 {
-	if (!is_valid_identifier(arg))
-	{
-		ft_printf(STDERR_FILENO, "minishell: export: `%s`: not a valid identifier\n", arg);
+	if (!node)
 		return ;
-	}
+	free(node->value);
+	node->value = ft_strdup(value);
+}
+
+static void	handle_new_export(t_env **env, char *arg)
+{
 	addback_node(env, arg);
 	sort_list(*env);
 }
 
+static void	export_argument(t_env **env, char *arg)
+{
+	char	*eq;
+	char	*key;
+	char	*val;
+	t_env	*existing;
+
+	if (!is_valid_identifier(arg))
+		return ((void)ft_printf(2, "minishell: export: `%s`: not a valid identifier\n", arg));
+	eq = ft_strchr(arg, '=');
+	if (!eq)
+	{
+		existing = find_env_node(*env, arg);
+		if (!existing)
+			handle_new_export(env, arg);
+		return ;
+	}
+	key = ft_substr(arg, 0, eq - arg);
+	val = ft_strdup(eq + 1);
+	existing = find_env_node(*env, key);
+	if (existing)
+		update_env_value(existing, val);
+	else
+		handle_new_export(env, arg);
+	free(key);
+	free(val);
+}
+
 static void	export_with_args(t_cmd *cmd)
 {
-	int i = 1;
+	int	i;
+
+	i = 1;
 	while (cmd->args[i])
 	{
-		add_export_arg(cmd->env, cmd->args[i]);
+		export_argument(cmd->env, cmd->args[i]);
 		i++;
 	}
 }
 
 int	ft_export(t_cmd *cmd)
 {
-	t_env *curr;
+	t_env	*curr;
 
 	if (!cmd || !cmd->env || !(*cmd->env))
 		return (1);

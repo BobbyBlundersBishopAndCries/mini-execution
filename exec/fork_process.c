@@ -31,6 +31,7 @@ static void	setup_pipe_and_fork(t_cmd *cmd, int prev_fd[2])
 
 	if (pid == 0)
 	{
+		handle_signals();
 		if (prev_fd[0] != -1)
 		{
 			dup2(prev_fd[0], STDIN_FILENO);

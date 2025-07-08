@@ -16,10 +16,11 @@ void	free_env_list(t_env *head)
 
 int is_valid_identifier(char *arg)
 {
-	int i = 0;
-
+	int i;
+	
 	if (!arg || (!ft_isalpha(arg[0]) && arg[0] != '_'))
 		return (0);
+	i = 1;
 	while (arg[i] && arg[i] != '=')
 	{
 		if (!ft_isalnum(arg[i]) && arg[i] != '_')

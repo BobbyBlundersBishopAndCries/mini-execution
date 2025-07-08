@@ -13,8 +13,7 @@ int	is_builtin(char *cmd)
 		ft_strcmp(cmd, "pwd") == 0 ||
 		ft_strcmp(cmd, "unset") == 0 ||
 		ft_strcmp(cmd, ":") == 0 ||
-		ft_strcmp(cmd, "!") == 0
-	);
+		ft_strcmp(cmd, "!") == 0);
 }
 
 int apply_redirections(t_redir *redir_list, int *saved_stdout)
@@ -47,40 +46,51 @@ void restore_redirections(int saved_stdout)
 	}
 }
 
-int	execute_builtin(t_cmd *cmd)
+static int	handle_builtin_cmd(t_cmd *cmd)
 {
-	int status;
-	int saved_stdout;
-
-	saved_stdout = -1;
-	if (!cmd || !cmd->args || !cmd->args[0])
-		return (1);
-	if (apply_redirections(cmd->files, &saved_stdout) < 0)
-		return (1);
 	if (ft_strcmp(cmd->args[0], "env") == 0)
-		status = ft_env(cmd);
-	else if (ft_strcmp(cmd->args[0], "cd") == 0)
-		status = ft_cd(cmd);
-	else if (ft_strcmp(cmd->args[0], "pwd") == 0)
-		status = ft_pwd();
-	else if (ft_strcmp(cmd->args[0], "exit") == 0)
-		status = ft_exit(cmd);
-	else if (ft_strcmp(cmd->args[0], "echo") == 0)
-		status = ft_echo(cmd);
-	else if (ft_strcmp(cmd->args[0], "export") == 0)
-		status = ft_export(cmd);
-	else if (ft_strcmp(cmd->args[0], "unset") == 0)
-		status = ft_unset(cmd);
-	else if (ft_strcmp(cmd->args[0], ":") == 0)
-		status = 0;
-	else
-		return (1);
+		return ft_env(cmd);
+	if (ft_strcmp(cmd->args[0], "cd") == 0)
+		return ft_cd(cmd);
+	if (ft_strcmp(cmd->args[0], "pwd") == 0)
+		return ft_pwd();
+	if (ft_strcmp(cmd->args[0], "exit") == 0)
+		return ft_exit(cmd);
+	if (ft_strcmp(cmd->args[0], "echo") == 0)
+		return ft_echo(cmd);
+	if (ft_strcmp(cmd->args[0], "export") == 0)
+		return ft_export(cmd);
+	if (ft_strcmp(cmd->args[0], "unset") == 0)
+		return ft_unset(cmd);
+	if (ft_strcmp(cmd->args[0], ":") == 0)
+		return 0;
+	return (1);
+}
+
+static void	refresh_envp_if_needed(t_cmd *cmd)
+{
 	if (ft_strcmp(cmd->args[0], "export") == 0 || ft_strcmp(cmd->args[0], "unset") == 0)
 	{
 		if (cmd->envp)
 			free_array(cmd->envp);
 		cmd->envp = env_tochar(*(cmd->env));
 	}
+}
+
+int	execute_builtin(t_cmd *cmd)
+{
+	int		status;
+	int		saved_stdout;
+
+	saved_stdout = -1;
+	if (!cmd || !cmd->args || !cmd->args[0])
+		return (1);
+	if (apply_redirections(cmd->files, &saved_stdout) < 0)
+		return (1);
+	if (!is_builtin(cmd->args[0]))
+		return (1);
+	status = handle_builtin_cmd(cmd);
+	refresh_envp_if_needed(cmd);
 	restore_redirections(saved_stdout);
 	return (status);
 }

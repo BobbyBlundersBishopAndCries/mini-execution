@@ -22,8 +22,10 @@ SRCS = main.c \
 			utiles_simo/get_env.c \
 			utiles_simo/free_list.c \
 			utiles_simo/cd_utils.c\
+			utiles_simo/export_utils.c \
 			utiles_simo/execute_builtin.c \
 			utiles_simo/env_tochar.c\
+			utiles_simo/errno.c\
 			builtins/ft_cd.c \
 			builtins/ft_env.c \
 			builtins/ft_pwd.c \
@@ -35,7 +37,7 @@ SRCS = main.c \
 			exec/red.c \
 			exec/fork_process.c\
 			exec/here_doc.c\
-			exec/signal.c
+			exec/signal.c 
 			
 OBJS = $(SRCS:.c=.o)
 

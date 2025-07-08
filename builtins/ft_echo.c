@@ -12,20 +12,20 @@
 
 #include "../minishell.h"
 
-int check(char *str)
+int	is_valid_n_flag(const char *s)
 {
-	int i;
+	int	i;
 
-	i = 0;
-	if(!str[i])
-		return 0;
-	if(str[i] == '-')
+	if (!s || s[0] != '-')
+	return (0);
+	i = 1;
+	while(s[i])
+	{
+		if (s[i] != 'n')
+			return (0);
 		i++;
-	while(str[i] == 'n')
-		i++;
-	if(!str[i])
-		return 1;
-	return 0;
+	}
+	return (1);
 }
 
 int	ft_echo(t_cmd *cmd)
@@ -36,23 +36,23 @@ int	ft_echo(t_cmd *cmd)
 	i = 1;
 	option = 0;
 	if (arg_count(cmd->args) == 1)
-		return (ft_printf(STDOUT_FILENO, "\n"));
-	if (arg_count(cmd->args) > 1)
 	{
-		while (ft_strcmp(cmd->args[i], "-n") == 0 || check(cmd->args[i]))
-		{
-			option = 1;
-			i++;
-		}
-		while (cmd->args[i] != NULL)
-		{
-			ft_printf(STDOUT_FILENO, "%s", cmd->args[i]);
-			if (cmd->args[i + 1] != NULL)
-				ft_printf(STDOUT_FILENO, " ");
-			i++;
-		}
+    	ft_printf(STDOUT_FILENO, "\n");
+    	return (0);
 	}
-	if (option == 0)
+	while (cmd->args[i] && is_valid_n_flag(cmd->args[i]))
+	{
+		option = 1;
+		i++;
+	}
+	while (cmd->args[i])
+	{
+		ft_printf(STDOUT_FILENO, "%s", cmd->args[i]);
+		if (cmd->args[i + 1])
+			ft_printf(STDOUT_FILENO, " ");
+		i++;
+	}
+	if (!option)
 		ft_printf(STDOUT_FILENO, "\n");
 	return (0);
 }

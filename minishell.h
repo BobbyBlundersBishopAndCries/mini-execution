@@ -6,7 +6,7 @@
 /*   By: med <med@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/30 14:38:27 by mlakhdar          #+#    #+#             */
-/*   Updated: 2025/07/07 19:11:41 by med              ###   ########.fr       */
+/*   Updated: 2025/07/08 14:48:57 by med              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -202,15 +202,20 @@ t_lst_cmd				*fill_struct(t_lst_token *lst_token, t_lst_hk *x , t_env *env);
 int		addback_node(t_env **head, char *av);
 void	free_env_list(t_env *head);
 t_env	*get_env(char **env);
+/* cd_utils.c */
 char 	*get_value(t_env *env, char *key);
-char	*back_home(t_env *env);
 void	update_val(t_env *env, char *key, char *new_val);
 char 	*resolve_cd_target(t_cmd *cmd);
 char 	*cd_to_path(t_cmd *cmd, char *oldpwd);
 int		arg_count(char **av);
+/*export_utils.c */
+void	swap_env_nodes(t_env *a, t_env *b);
+void	sort_list(t_env *head);
+/**/
 int 	is_valid_identifier(char *name);
 int		is_builtin(char *cmd);
 int		execute_builtin(t_cmd *cmd);
+/* env_tochar.c */
 void	free_array(char **array);
 char	*strjoin_val_path(char *s1, char *s2, int flag);
 char	**env_tochar(t_env *env);
@@ -231,9 +236,10 @@ int		handle_all_heredocs(t_cmd *cmd);
 int		handle_heredoc(t_redir *redir);
 void	close_redirs(t_redir *list);
 /* execute command */
+int		exec_error_status(int err);
 void	error(void);
 void	execute_command(t_cmd *cmd);
 void	execute_pipeline(t_cmd *cmd);
 /* signals */
-void handle_signals(void);
+void 	handle_signals(void);
 #endif

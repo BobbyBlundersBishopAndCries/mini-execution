@@ -12,6 +12,21 @@
 
 #include "../minishell.h"
 
+int arg_count(char **av)
+{
+	int	count;
+	int	i;
+	
+	i = 0;
+	count = 0;
+	while (av[i])
+	{
+		count++;
+		i++;
+	}
+	return (count);
+}
+
 char *get_value(t_env *env, char *key)
 {
 	t_env	*curr;
@@ -66,7 +81,7 @@ char *cd_to_path(t_cmd *cmd, char *oldpwd)
 		if (!cmd->args[1] )
 			ft_printf(2, "bash: cd: HOME not set\n");
 		else
-			ft_printf(STDERR_FILENO, "bash: cd: %s: %s\n", cmd->args[1], strerror(errno));
+			ft_printf(STDERR_FILENO, "minishell: cd: %s: %s\n", cmd->args[1], strerror(errno));
 		free(oldpwd);
 		free(target);
 		return (NULL);
