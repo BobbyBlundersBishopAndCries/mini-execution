@@ -6,7 +6,7 @@
 /*   By: feedback <feedback@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/30 14:38:27 by mlakhdar          #+#    #+#             */
-/*   Updated: 2025/07/09 15:46:08 by feedback         ###   ########.fr       */
+/*   Updated: 2025/07/09 18:44:28 by feedback         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -199,7 +199,27 @@ void					print_lst(t_lst_token *ltoken);
 /* ─────────────────────────────────────────────────────────── */
 
 t_lst_cmd				*parsing(char *input , t_env *env,int *g_es);
-t_lst_cmd				*fill_struct(t_lst_token *lst_token, t_lst_hk *x , t_env *env);
+t_redir	*add_in_file(t_token *redir, t_token *file, t_redir *head, t_lst_hk *x)
+;
+size_t get_all_argscmd(t_token *token);
+typedef struct s_get_cmd_init
+{
+	t_token *token;
+	t_cmd *cmd;
+	size_t index;
+	size_t count;
+} t_get_cmd_init;
+void init_get_cmd(t_get_cmd_init *init, t_token **t, t_lst_hk *x, t_env *env);
+t_cmd *get_cmd(t_token **t, t_lst_hk *x, t_env *env);
+typedef struct s_init_fill
+{
+	t_lst_cmd *lst_cmds;
+	t_token *token;
+	t_cmd *cmd;
+	t_cmd *tail;
+} t_init_fill;
+void fill_struct_init(t_init_fill *init, t_lst_token *lst_token, t_lst_hk *x);
+t_lst_cmd *fill_struct(t_lst_token *lst_token, t_lst_hk *x, t_env *env);
 
 /* ─────────────────────────────────────────────────────────── */
 /*                          EXECUTION                          */

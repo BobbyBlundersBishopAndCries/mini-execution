@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   filling.c                                          :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: feedback <feedback@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/07/09 18:26:56 by feedback          #+#    #+#             */
+/*   Updated: 2025/07/09 18:43:51 by feedback         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../minishell.h"
 
 size_t	get_all_argscmd(t_token *token)
@@ -45,64 +57,36 @@ t_redir	*add_in_file(t_token *redir, t_token *file, t_redir *head, t_lst_hk *x)
 	return (head);
 }
 
-t_cmd	*get_cmd(t_token **t, t_lst_hk *x, t_env *env)
+void	fill_struct_init(t_init_fill *init, t_lst_token *lst_token, t_lst_hk *x)
 {
-	t_token	*token;
-	size_t	count;
-	t_cmd	*cmd;
-	size_t	index;
-
-	index = 0;
-	token = *t;
-	cmd = ft_malloc(sizeof(t_cmd), x);
-	count = get_all_argscmd(token);
-	cmd->args = ft_malloc(sizeof(char *) * (count + 2), x);
-	cmd->files = NULL;
-	cmd->next = NULL;
-	cmd->env = &env;
-	while (token && token->type != PIPE)
-	{
-		if (is_redir(token) && token->next && token->next->type == WORD)
-		{
-			cmd->files = add_in_file(token, token->next, cmd->files, x);
-			token = token->next;
-		}
-		else if (token->type == WORD)
-			cmd->args[index++] = ft_strdump(token->token, x);
-		token = token->next;
-	}
-	cmd->args[index] = NULL;
-	*t = token;
-	return (cmd);
+	init->lst_cmds = ft_malloc(sizeof(t_lst_cmd), x);
+	init->lst_cmds->head = NULL;
+	init->token = lst_token->head;
+	init->cmd = NULL;
+	init->tail = NULL;
 }
 
 t_lst_cmd	*fill_struct(t_lst_token *lst_token, t_lst_hk *x, t_env *env)
 {
-	t_lst_cmd	*lst_cmds;
-	t_token		*token;
-	t_cmd		*tail;
-	t_cmd		*cmd;
+	t_init_fill	*init;
 
-	lst_cmds = ft_malloc(sizeof(t_lst_cmd), x);
-	token = lst_token->head;
-	tail = NULL;
-	cmd = NULL;
-	lst_cmds->head = NULL;
-	while (token)
+	init = ft_malloc(sizeof(t_init_fill), x);
+	fill_struct_init(init, lst_token, x);
+	while (init->token)
 	{
-		cmd = get_cmd(&token, x, env);
-		if (!lst_cmds->head)
+		init->cmd = get_cmd(&init->token, x, env);
+		if (!init->lst_cmds->head)
 		{
-			lst_cmds->head = cmd;
-			tail = cmd;
+			init->lst_cmds->head = init->cmd;
+			init->tail = init->cmd;
 		}
 		else
 		{
-			tail->next = cmd;
-			tail = cmd;
+			init->tail->next = init->cmd;
+			init->tail = init->cmd;
 		}
-		if (token && token->type == PIPE)
-			token = token->next;
+		if (init->token && init->token->type == PIPE)
+			init->token = init->token->next;
 	}
-	return (lst_cmds);
+	return (init->lst_cmds);
 }

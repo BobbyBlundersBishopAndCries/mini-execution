@@ -1,10 +1,22 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   env_tochar.c                                       :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: feedback <feedback@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/07/09 18:49:29 by feedback          #+#    #+#             */
+/*   Updated: 2025/07/09 18:49:29 by feedback         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../minishell.h"
 
 static int	count_nodes(t_env *lst)
 {
 	int		count;
 	t_env	*curr;
-	
+
 	count = 0;
 	curr = lst;
 	while (curr)
@@ -28,10 +40,10 @@ void	free_array(char **array)
 	free(array);
 }
 
-char *strjoin_val_path(char *s1, char *s2, int flag)
+char	*strjoin_val_path(char *s1, char *s2, int flag)
 {
-	char *temp;
-	char *full;
+	char	*temp;
+	char	*full;
 
 	if (flag == 1)
 	{

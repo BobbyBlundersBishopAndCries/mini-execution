@@ -1,14 +1,27 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   get_env.c                                          :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: feedback <feedback@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/07/09 18:49:40 by feedback          #+#    #+#             */
+/*   Updated: 2025/07/09 18:49:40 by feedback         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../minishell.h"
 
-char *dup_key(char *arg)
+char	*dup_key(char *arg)
 {
-	int i;
-	int	j;
+	int		i;
+	int		j;
+	char	*key;
 
 	i = 0;
 	while (arg[i] && arg[i] != '=')
 		i++;
-	char *key = malloc(i + 1);
+	key = malloc(i + 1);
 	if (!key)
 		return (NULL);
 	j = 0;
@@ -21,7 +34,7 @@ char *dup_key(char *arg)
 	return (key);
 }
 
-char *dup_value(char *arg)
+char	*dup_value(char *arg)
 {
 	int		i;
 	char	*value;
@@ -39,7 +52,7 @@ char *dup_value(char *arg)
 	if (!value)
 		return (NULL);
 	j = 0;
-	while(j < len)
+	while (j < len)
 	{
 		value[j] = arg[i + j];
 		j++;
@@ -48,10 +61,10 @@ char *dup_value(char *arg)
 	return (value);
 }
 
-t_env *create_env_node(char *arg)
+t_env	*create_env_node(char *arg)
 {
 	t_env	*node;
-	
+
 	node = malloc(sizeof(t_env));
 	if (!node)
 		return (NULL);

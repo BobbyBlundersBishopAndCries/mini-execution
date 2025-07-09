@@ -1,10 +1,22 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   export_utils.c                                     :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: feedback <feedback@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/07/09 18:49:35 by feedback          #+#    #+#             */
+/*   Updated: 2025/07/09 18:50:00 by feedback         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../minishell.h"
 
 void	swap_env_nodes(t_env *a, t_env *b)
 {
-	char *tmp_key;
-	char *tmp_value;
-	
+	char	*tmp_key;
+	char	*tmp_value;
+
 	tmp_key = a->key;
 	tmp_value = a->value;
 	a->key = b->key;
@@ -15,9 +27,9 @@ void	swap_env_nodes(t_env *a, t_env *b)
 
 void	sort_list(t_env *head)
 {
-	t_env *curr;
-	t_env *curr2;
-	
+	t_env	*curr;
+	t_env	*curr2;
+
 	curr = head;
 	while (curr)
 	{
@@ -43,7 +55,7 @@ t_env	*find_env_node(t_env *env, char *key)
 	return (NULL);
 }
 
- void	update_env_value(t_env *node, char *value)
+void	update_env_value(t_env *node, char *value)
 {
 	if (!node)
 		return ;

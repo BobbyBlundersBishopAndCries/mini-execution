@@ -5,27 +5,28 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: feedback <feedback@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/06/30 11:51:20 by mlakhdar          #+#    #+#             */
-/*   Updated: 2025/07/02 14:51:01 by feedback         ###   ########.fr       */
+/*   Created: 2025/07/09 18:25:42 by feedback          #+#    #+#             */
+/*   Updated: 2025/07/09 18:26:34 by feedback         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-char *get_env_par(char *name , t_env *env)
+char	*get_env_par(char *name, t_env *env)
 {
-	t_env *head;
+	t_env	*head;
 
 	head = env;
-	while(head)
+	while (head)
 	{
-		if(strcmp(head->key , name) == 0)
-			return head->value;
+		if (ft_strcmp(head->key, name) == 0)
+			return (head->value);
 		head = head->next;
 	}
-	return NULL;
+	return (NULL);
 }
-char	*change_value(char *key, size_t count, t_lst_hk *x , t_env *env)
+
+char	*change_value(char *key, size_t count, t_lst_hk *x, t_env *env)
 {
 	char	*name;
 	char	*val;
@@ -33,7 +34,7 @@ char	*change_value(char *key, size_t count, t_lst_hk *x , t_env *env)
 	name = ft_malloc(count + 1, x);
 	strncpy(name, key, count);
 	name[count] = '\0';
-	val = get_env_par(name , env);
+	val = get_env_par(name, env);
 	if (val)
 		return (val);
 	return (ft_strdump("", x));

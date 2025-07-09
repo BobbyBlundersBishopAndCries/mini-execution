@@ -12,7 +12,7 @@
 
 #include "../minishell.h"
 
-int	newline_error()
+int	newline_error(void)
 {
 	ft_printf(2, "minishell: syntax error near unexpected token `newline'\n");
 	return (0);
@@ -38,9 +38,10 @@ int	sepipe_o(t_lst_token *token)
 
 bool	is_redir(t_token *a)
 {
-	if(!a)
-		return false;
-	return (a->type == REDIR_APPEND || a->type == REDIR_IN || a->type == REDIR_OUT || a->type == HEREDOC);
+	if (!a)
+		return (false);
+	return (a->type == REDIR_APPEND || a->type == REDIR_IN
+		|| a->type == REDIR_OUT || a->type == HEREDOC);
 }
 
 int	seredir_handle(t_lst_token *token)
