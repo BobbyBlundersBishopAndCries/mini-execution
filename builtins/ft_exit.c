@@ -6,7 +6,7 @@
 /*   By: med <med@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/01 03:35:36 by med               #+#    #+#             */
-/*   Updated: 2025/07/07 11:16:30 by med              ###   ########.fr       */
+/*   Updated: 2025/07/09 13:51:30 by med              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,6 +56,6 @@ int	ft_exit(t_cmd *cmd)
 		exit_status = (unsigned char)ft_atoi(cmd->args[1]);
     }
 	else
-		exit_status = g_exit_status;
+		exit_status = g_shell.exit_status;
 	exit(exit_status);
 }

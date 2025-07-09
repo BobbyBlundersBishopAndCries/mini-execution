@@ -6,7 +6,7 @@
 /*   By: med <med@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/30 14:38:27 by mlakhdar          #+#    #+#             */
-/*   Updated: 2025/07/09 13:38:07 by med              ###   ########.fr       */
+/*   Updated: 2025/07/09 14:58:39 by med              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,7 @@ typedef struct s_shell_state
 	int		exit_status;
 	int		sigint_received;
 	int		in_heredoc;
+	int		is_interactive;
 }	t_shell_state;
 extern t_shell_state	g_shell;
 
@@ -89,7 +90,6 @@ typedef struct s_cmd
 	t_redir				*files;
 	t_env 				**env;
 	char 				**envp;
-	int					*exit_status;
 	int					fd[2];
 	struct s_cmd *next;
 }						t_cmd;
@@ -249,5 +249,6 @@ void	execute_command(t_cmd *cmd);
 void	execute_pipeline(t_cmd *cmd);
 /* signals */
 void 	handle_signals(void);
+void	sigint_handler(int signo);
 void	restore_signals_to_default(void);
 #endif

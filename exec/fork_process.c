@@ -4,8 +4,8 @@ static void	exec_or_builtin(t_cmd *cmd)
 {
 	if (is_builtin(cmd->args[0]))
 	{
-		*(cmd->exit_status) = execute_builtin(cmd);
-		exit(*(cmd->exit_status));
+		g_shell.exit_status = execute_builtin(cmd);
+		exit(g_shell.exit_status);
 	}
 	execute_command(cmd);
 	exit(EXIT_FAILURE);
@@ -59,17 +59,14 @@ static void	fork_and_execute(t_cmd *cmd, int prev_fd[2])
 		prev_fd[0] = -1;
 }
 
-void	execute_pipeline(t_cmd *cmd)
+void execute_pipeline(t_cmd *cmd)
 {
-	int		prev_fd[2];
-	int		status;
-	t_cmd	*tmp;
+	int prev_fd[2] = {-1, -1};
+	int status;
+	t_cmd *tmp = cmd;
 
-	prev_fd[0] = -1;
-	prev_fd[1] = -1;
-	tmp = cmd;
 	if (handle_all_heredocs(cmd))
-		return ;
+		return;
 	while (tmp)
 	{
 		fork_and_execute(tmp, prev_fd);
@@ -80,6 +77,6 @@ void	execute_pipeline(t_cmd *cmd)
 		if (WIFEXITED(status))
 			g_shell.exit_status = WEXITSTATUS(status);
 		else if (WIFSIGNALED(status))
-			*(cmd->exit_status) = 128 + WTERMSIG(status);
+			g_shell.exit_status = 128 + WTERMSIG(status);
 	}
 }
