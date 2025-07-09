@@ -1,8 +1,20 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   execute_command.c                                  :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: feedback <feedback@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/07/09 18:52:29 by feedback          #+#    #+#             */
+/*   Updated: 2025/07/09 18:52:29 by feedback         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../minishell.h"
 
 int	is_directory(const char *path)
 {
-	struct stat st;
+	struct stat	st;
 
 	if (stat(path, &st) == -1)
 		return (0);
@@ -63,8 +75,8 @@ static char	*resolve_exec_path(t_cmd *cmd)
 		return (p);
 	}
 	if (cmd->args[0][0] == '~')
-		return (strjoin_val_path(get_value(*(cmd->env), "HOME"),
-				cmd->args[0] + 1, 1));
+		return (strjoin_val_path(get_value(*(cmd->env), "HOME"), cmd->args[0]
+				+ 1, 1));
 	return (path_found(*(cmd->env), cmd->args[0]));
 }
 

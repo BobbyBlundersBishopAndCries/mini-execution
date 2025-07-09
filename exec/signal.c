@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   signal.c                                           :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: feedback <feedback@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/07/09 18:52:39 by feedback          #+#    #+#             */
+/*   Updated: 2025/07/09 18:53:28 by feedback         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../minishell.h"
 
 void	error(void)
@@ -12,7 +24,7 @@ void	sigint_handler(int signo)
 	if (g_shell.in_heredoc)
 	{
 		g_shell.exit_status = 130;
-		write(STDOUT_FILENO, "\n", 1);;
+		write(STDOUT_FILENO, "\n", 1);
 	}
 	else
 	{
@@ -25,13 +37,13 @@ void	sigint_handler(int signo)
 	}
 }
 
-void handle_signals(void)
+void	handle_signals(void)
 {
 	signal(SIGINT, sigint_handler);
 	signal(SIGQUIT, SIG_IGN);
 }
 
-void restore_signals_to_default(void)
+void	restore_signals_to_default(void)
 {
 	signal(SIGINT, SIG_DFL);
 	signal(SIGQUIT, SIG_DFL);

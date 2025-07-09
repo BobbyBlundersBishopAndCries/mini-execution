@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   here_doc.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: med <med@student.42.fr>                    +#+  +:+       +#+        */
+/*   By: feedback <feedback@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/07 17:29:43 by mohabid           #+#    #+#             */
-/*   Updated: 2025/07/09 15:02:48 by med              ###   ########.fr       */
+/*   Updated: 2025/07/09 18:53:05 by feedback         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,20 +14,20 @@
 
 void	write_to_pipe_from_redir(t_redir *redir, int pipe_fd[2])
 {
-	char *line;
+	char	*line;
 
-	close(pipe_fd[0]);  // Close read end; child writes
+	close(pipe_fd[0]);
 	while (1)
 	{
-		write(1, "> ", 2);  // heredoc prompt
+		write(1, "> ", 2);
 		line = get_next_line(STDIN_FILENO);
 		if (!line)
-			break;
-		if (ft_strncmp(line, redir->files, ft_strlen(redir->files)) == 0 &&
-			line[ft_strlen(redir->files)] == '\n')
+			break ;
+		if (ft_strncmp(line, redir->files, ft_strlen(redir->files)) == 0
+			&& line[ft_strlen(redir->files)] == '\n')
 		{
 			free(line);
-			break;
+			break ;
 		}
 		write(pipe_fd[1], line, ft_strlen(line));
 		free(line);
@@ -42,7 +42,7 @@ int	handle_heredoc(t_redir *redir)
 	int		status;
 
 	if (pipe(pipe_fd) == -1)
-		return (1); 
+		return (1);
 	g_shell.in_heredoc = 1;
 	id = fork();
 	if (id < 0)
@@ -55,32 +55,33 @@ int	handle_heredoc(t_redir *redir)
 	}
 	else
 	{
-   		close(pipe_fd[1]);
-   		waitpid(id, &status, 0);
-	    if (WIFSIGNALED(status) && WTERMSIG(status) == SIGINT)
-    	{
-       		redir->fd = -1;
-        	g_shell.exit_status = 130;
-       		g_shell.in_heredoc = 0;   
-        	return (1);                 
-    	}
-    	if (WIFEXITED(status) && WEXITSTATUS(status) != 0)
-    	{
-        	close(pipe_fd[0]);
-       		redir->fd = -1;
-       		g_shell.exit_status = WEXITSTATUS(status);
-        	return (1);
-    	}
-    redir->fd = pipe_fd[0];
-    return (0);
-}
+		close(pipe_fd[1]);
+		waitpid(id, &status, 0);
+		if (WIFSIGNALED(status) && WTERMSIG(status) == SIGINT)
+		{
+			redir->fd = -1;
+			g_shell.exit_status = 130;
+			g_shell.in_heredoc = 0;
+			return (1);
+		}
+		if (WIFEXITED(status) && WEXITSTATUS(status) != 0)
+		{
+			close(pipe_fd[0]);
+			redir->fd = -1;
+			g_shell.exit_status = WEXITSTATUS(status);
+			return (1);
+		}
+		redir->fd = pipe_fd[0];
+		return (0);
+	}
 }
 
 int	handle_all_heredocs(t_cmd *cmd)
 {
-	t_cmd *tmp = cmd;
-	t_redir *redir;
+	t_cmd	*tmp;
+	t_redir	*redir;
 
+	tmp = cmd;
 	while (tmp)
 	{
 		redir = tmp->files;

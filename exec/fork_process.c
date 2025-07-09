@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   fork_process.c                                     :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: feedback <feedback@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/07/09 18:52:31 by feedback          #+#    #+#             */
+/*   Updated: 2025/07/09 18:54:25 by feedback         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../minishell.h"
 
 static void	exec_or_builtin(t_cmd *cmd)
@@ -59,14 +71,17 @@ static void	fork_and_execute(t_cmd *cmd, int prev_fd[2])
 		prev_fd[0] = -1;
 }
 
-void execute_pipeline(t_cmd *cmd)
+void	execute_pipeline(t_cmd *cmd)
 {
-	int prev_fd[2] = {-1, -1};
-	int status;
-	t_cmd *tmp = cmd;
+	int		prev_fd[2];
+	int		status;
+	t_cmd	*tmp;
 
+	prev_fd[0] = -1;
+	prev_fd[1] = -1;
+	tmp = cmd;
 	if (handle_all_heredocs(cmd))
-		return;
+		return ;
 	while (tmp)
 	{
 		fork_and_execute(tmp, prev_fd);

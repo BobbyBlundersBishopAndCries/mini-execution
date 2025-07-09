@@ -1,8 +1,20 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   red.c                                              :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: feedback <feedback@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/07/09 18:52:36 by feedback          #+#    #+#             */
+/*   Updated: 2025/07/09 18:52:36 by feedback         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../minishell.h"
 
-int open_file(t_redir *redir, t_redirct mode)
+int	open_file(t_redir *redir, t_redirct mode)
 {
-	int fd;
+	int	fd;
 
 	fd = -1;
 	if (!redir || !redir->files)
@@ -20,7 +32,7 @@ int open_file(t_redir *redir, t_redirct mode)
 	return (fd);
 }
 
-int redirect_fd(int fd, int std_fd)
+int	redirect_fd(int fd, int std_fd)
 {
 	if (dup2(fd, std_fd) == -1)
 	{
@@ -30,9 +42,9 @@ int redirect_fd(int fd, int std_fd)
 	return (0);
 }
 
-int apply_single_redirection(t_redir *redir)
+int	apply_single_redirection(t_redir *redir)
 {
-	int std_fd;
+	int	std_fd;
 
 	if (!redir)
 		return (1);
@@ -50,7 +62,7 @@ int apply_single_redirection(t_redir *redir)
 	return (0);
 }
 
-int setup_redirections(t_redir *list)
+int	setup_redirections(t_redir *list)
 {
 	while (list)
 	{
@@ -61,10 +73,10 @@ int setup_redirections(t_redir *list)
 	return (0);
 }
 
-void close_redirs(t_redir *list)
+void	close_redirs(t_redir *list)
 {
-	t_redir *tmp;
-	
+	t_redir	*tmp;
+
 	tmp = list;
 	while (tmp)
 	{
