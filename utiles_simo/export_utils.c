@@ -31,3 +31,22 @@ void	sort_list(t_env *head)
 		curr = curr->next;
 	}
 }
+
+t_env	*find_env_node(t_env *env, char *key)
+{
+	while (env)
+	{
+		if (ft_strcmp(env->key, key) == 0)
+			return (env);
+		env = env->next;
+	}
+	return (NULL);
+}
+
+ void	update_env_value(t_env *node, char *value)
+{
+	if (!node)
+		return ;
+	free(node->value);
+	node->value = ft_strdup(value);
+}

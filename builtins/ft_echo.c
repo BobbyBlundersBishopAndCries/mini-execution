@@ -17,9 +17,9 @@ int	is_valid_n_flag(const char *s)
 	int	i;
 
 	if (!s || s[0] != '-')
-	return (0);
+		return (0);
 	i = 1;
-	while(s[i])
+	while (s[i])
 	{
 		if (s[i] != 'n')
 			return (0);
@@ -37,8 +37,8 @@ int	ft_echo(t_cmd *cmd)
 	option = 0;
 	if (arg_count(cmd->args) == 1)
 	{
-    	ft_printf(STDOUT_FILENO, "\n");
-    	return (0);
+		ft_printf(STDOUT_FILENO, "\n");
+		return (0);
 	}
 	while (cmd->args[i] && is_valid_n_flag(cmd->args[i]))
 	{

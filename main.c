@@ -11,17 +11,14 @@ void	init_shell_terminal_control(void)
 {
 	pid_t shell_pgid;
 
-	// Ignore job control signals (optional but common)
 	signal(SIGTTIN, SIG_IGN);
 	signal(SIGTTOU, SIG_IGN);
 	signal(SIGTSTP, SIG_IGN);
 
-	// Make shell process its own group
 	shell_pgid = getpid();
 	if (setpgid(shell_pgid, shell_pgid) < 0)
 		perror("setpgid");
 
-	// Take control of the terminal
 	if (tcsetpgrp(STDIN_FILENO, shell_pgid) < 0)
 		perror("tcsetpgrp");
 }
@@ -40,9 +37,7 @@ int	main(int argc, char **argv, char **envp)
 	g_shell.is_interactive = isatty(STDIN_FILENO);
 	if (g_shell.is_interactive)
 		handle_signals();
-
 	envir = get_env(envp);
-
 	while (1)
 	{
 		if (g_shell.is_interactive)
@@ -56,11 +51,13 @@ int	main(int argc, char **argv, char **envp)
 				write(1, "exit\n", 5);
 			break;
 		}
+
 		if (*input == '\0')
 		{
 			free(input);
 			continue;
 		}
+
 		if (g_shell.is_interactive)
 			add_history(input);
 
@@ -84,7 +81,6 @@ int	main(int argc, char **argv, char **envp)
 			g_shell.exit_status = execute_builtin(cmd);
 		else
 			execute_pipeline(cmd);
-
 		free_all(cmds->k);
 		free_array(env_char);
 	}

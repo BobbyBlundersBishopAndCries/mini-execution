@@ -20,11 +20,11 @@ static void	free_node(t_env *node)
 	free(node);
 }
 
-static int del_arg(t_env **head, char *key)
+static int	del_arg(t_env **head, char *key)
 {
 	t_env	*curr;
 	t_env	*previous;
-	
+
 	curr = *head;
 	previous = NULL;
 	if (head == NULL || *head == NULL || !key)
@@ -48,8 +48,8 @@ static int del_arg(t_env **head, char *key)
 
 int	ft_unset(t_cmd *cmd)
 {
-	int		i;
-	int		ac;
+	int	i;
+	int	ac;
 
 	if (!cmd || !cmd->env || !(*cmd->env))
 		return (1);
@@ -61,7 +61,8 @@ int	ft_unset(t_cmd *cmd)
 	{
 		if (!is_valid_identifier(cmd->args[i]))
 		{
-			ft_printf(2, "bash: unset `%s\': not a valid identifier\n", cmd->args[i]);
+			ft_printf(2, "bash: unset `%s\': not a valid identifier\n",
+				cmd->args[i]);
 			return (1);
 		}
 		del_arg(cmd->env, cmd->args[i]);

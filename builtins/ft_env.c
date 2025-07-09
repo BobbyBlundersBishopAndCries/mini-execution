@@ -14,15 +14,14 @@
 
 int	ft_env(t_cmd *cmd)
 {
-	t_env *curr;
+	t_env	*curr;
 
 	curr = *(cmd->env);
 	while (curr)
 	{
 		if (curr->value)
-			ft_printf(STDOUT_FILENO, "%s=%s\n", curr->key , curr->value);
+			ft_printf(STDOUT_FILENO, "%s=%s\n", curr->key, curr->value);
 		curr = curr->next;
 	}
 	return (0);
 }
-

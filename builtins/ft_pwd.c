@@ -24,5 +24,5 @@ int	ft_pwd(void)
 	}
 	ft_printf(STDOUT_FILENO, "%s\n", abs_path);
 	free(abs_path);
-	return (EXIT_SUCCESS); 
+	return (EXIT_SUCCESS);
 }

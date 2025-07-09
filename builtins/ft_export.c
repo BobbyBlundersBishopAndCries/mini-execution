@@ -3,33 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   ft_export.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: med <med@student.42.fr>                    +#+  +:+       +#+        */
+/*   By: feedback <feedback@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/26 19:54:21 by med               #+#    #+#             */
-/*   Updated: 2025/07/08 15:24:42 by med              ###   ########.fr       */
+/*   Updated: 2025/07/09 15:45:10 by feedback         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
-
-static t_env	*find_env_node(t_env *env, char *key)
-{
-	while (env)
-	{
-		if (ft_strcmp(env->key, key) == 0)
-			return (env);
-		env = env->next;
-	}
-	return (NULL);
-}
-
-static void	update_env_value(t_env *node, char *value)
-{
-	if (!node)
-		return ;
-	free(node->value);
-	node->value = ft_strdup(value);
-}
 
 static void	handle_new_export(t_env **env, char *arg)
 {
@@ -45,7 +26,8 @@ static void	export_argument(t_env **env, char *arg)
 	t_env	*existing;
 
 	if (!is_valid_identifier(arg))
-		return ((void)ft_printf(2, "minishell: export: `%s`: not a valid identifier\n", arg));
+		return ((void)ft_printf(2,
+				"minishell: export: `%s`: not a valid identifier\n", arg));
 	eq = ft_strchr(arg, '=');
 	if (!eq)
 	{

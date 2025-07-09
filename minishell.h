@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: med <med@student.42.fr>                    +#+  +:+       +#+        */
+/*   By: feedback <feedback@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/30 14:38:27 by mlakhdar          #+#    #+#             */
-/*   Updated: 2025/07/09 14:58:39 by med              ###   ########.fr       */
+/*   Updated: 2025/07/09 15:46:08 by feedback         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -209,19 +209,19 @@ t_lst_cmd				*fill_struct(t_lst_token *lst_token, t_lst_hk *x , t_env *env);
 int		addback_node(t_env **head, char *av);
 void	free_env_list(t_env *head);
 t_env	*get_env(char **env);
+void update_env_value(t_env *node, char *value);
 /* cd_utils.c */
 char 	*get_value(t_env *env, char *key);
 void	update_val(t_env *env, char *key, char *new_val);
-char 	*resolve_cd_target(t_cmd *cmd);
+t_env *find_env_node(t_env *env, char *key);
+char *resolve_cd_target(t_cmd *cmd);
 char 	*cd_to_path(t_cmd *cmd, char *oldpwd);
 int		arg_count(char **av);
-/*export_utils.c */
 void	swap_env_nodes(t_env *a, t_env *b);
 void	sort_list(t_env *head);
 /**/
 int 	is_valid_identifier(char *name);
 int		is_builtin(char *cmd);
-/* env_tochar.c */
 void	free_array(char **array);
 char	*strjoin_val_path(char *s1, char *s2, int flag);
 char	**env_tochar(t_env *env);
@@ -251,4 +251,6 @@ void	execute_pipeline(t_cmd *cmd);
 void 	handle_signals(void);
 void	sigint_handler(int signo);
 void	restore_signals_to_default(void);
+//export utils 
+
 #endif
