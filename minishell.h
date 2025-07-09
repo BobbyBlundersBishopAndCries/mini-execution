@@ -6,7 +6,7 @@
 /*   By: med <med@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/30 14:38:27 by mlakhdar          #+#    #+#             */
-/*   Updated: 2025/07/08 14:48:57 by med              ###   ########.fr       */
+/*   Updated: 2025/07/09 13:38:07 by med              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,12 +31,19 @@
 # include <sys/stat.h>
 # define READ_END 0
 # define WRITE_END 1
-extern int	g_exit_status;
+
+typedef struct s_shell_state
+{
+	int		exit_status;
+	int		sigint_received;
+	int		in_heredoc;
+}	t_shell_state;
+extern t_shell_state	g_shell;
+
 /* ─────────────────────────────────────────────────────────── */
 /*                       MEMORY MANAGER (GC)                   */
 /* ─────────────────────────────────────────────────────────── */
 
-extern int g_es;
 
 typedef struct s_housekept
 {
@@ -214,7 +221,6 @@ void	sort_list(t_env *head);
 /**/
 int 	is_valid_identifier(char *name);
 int		is_builtin(char *cmd);
-int		execute_builtin(t_cmd *cmd);
 /* env_tochar.c */
 void	free_array(char **array);
 char	*strjoin_val_path(char *s1, char *s2, int flag);
@@ -237,9 +243,11 @@ int		handle_heredoc(t_redir *redir);
 void	close_redirs(t_redir *list);
 /* execute command */
 int		exec_error_status(int err);
+int		execute_builtin(t_cmd *cmd);
 void	error(void);
 void	execute_command(t_cmd *cmd);
 void	execute_pipeline(t_cmd *cmd);
 /* signals */
 void 	handle_signals(void);
+void	restore_signals_to_default(void);
 #endif

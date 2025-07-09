@@ -23,7 +23,6 @@ SRCS = main.c \
 			utiles_simo/free_list.c \
 			utiles_simo/cd_utils.c\
 			utiles_simo/export_utils.c \
-			utiles_simo/execute_builtin.c \
 			utiles_simo/env_tochar.c\
 			utiles_simo/errno.c\
 			builtins/ft_cd.c \
@@ -33,6 +32,7 @@ SRCS = main.c \
 			builtins/ft_echo.c \
 			builtins/ft_export.c \
 			builtins/ft_unset.c \
+			exec/execute_builtin.c \
 			exec/execute_command.c \
 			exec/red.c \
 			exec/fork_process.c\

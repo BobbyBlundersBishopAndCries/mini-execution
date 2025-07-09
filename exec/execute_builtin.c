@@ -16,33 +16,46 @@ int	is_builtin(char *cmd)
 		ft_strcmp(cmd, "!") == 0);
 }
 
-int apply_redirections(t_redir *redir_list, int *saved_stdout)
+int apply_redirections(t_redir *redir_list, int *saved_stdout, int *saved_stdin)
 {
 	t_redir *tmp;
 	
 	tmp = redir_list;
 	while (tmp)
 	{
-		if (tmp->index == R_OUT)
-			tmp->fd = open_file(tmp, R_OUT);
-		else if (tmp->index == R_APPEND)
-			tmp->fd = open_file(tmp, R_APPEND);
+		tmp->fd = open_file(tmp, tmp->index);
 		if (tmp->fd < 0)
 			return (perror("open"), -1);
-		*saved_stdout = dup(STDOUT_FILENO);
-		if (*saved_stdout < 0 || dup2(tmp->fd, STDOUT_FILENO) < 0)
-			return (perror("dup/dup2"), -1);
+		if ((tmp->index == R_OUT || tmp->index == R_APPEND) && *saved_stdout == -1)
+			*saved_stdout = dup(STDOUT_FILENO);
+		if ((tmp->index == R_IN || tmp->index == R_HEREDOC) && *saved_stdin == -1)
+			*saved_stdin = dup(STDIN_FILENO);
+		if (tmp->index == R_OUT || tmp->index == R_APPEND)
+		{
+			if (dup2(tmp->fd, STDOUT_FILENO) < 0)
+				return (perror("dup2 out"), -1);
+		}
+		else if (tmp->index == R_IN || tmp->index == R_HEREDOC)
+		{
+			if (dup2(tmp->fd, STDIN_FILENO) < 0)
+				return (perror("dup2 in"), -1);
+		}
 		tmp = tmp->next;
 	}
 	return (0);
 }
 
-void restore_redirections(int saved_stdout)
+void restore_redirections(int saved_stdout, int saved_stdin)
 {
 	if (saved_stdout >= 0)
 	{
 		dup2(saved_stdout, STDOUT_FILENO);
 		close(saved_stdout);
+	}
+	if (saved_stdin >= 0)
+	{
+		dup2(saved_stdin, STDIN_FILENO);
+		close(saved_stdin);
 	}
 }
 
@@ -81,16 +94,18 @@ int	execute_builtin(t_cmd *cmd)
 {
 	int		status;
 	int		saved_stdout;
+	int		saved_stdin;
 
+	saved_stdin = -1;
 	saved_stdout = -1;
 	if (!cmd || !cmd->args || !cmd->args[0])
 		return (1);
-	if (apply_redirections(cmd->files, &saved_stdout) < 0)
+	if (apply_redirections(cmd->files, &saved_stdout, &saved_stdin) < 0)
 		return (1);
 	if (!is_builtin(cmd->args[0]))
 		return (1);
 	status = handle_builtin_cmd(cmd);
 	refresh_envp_if_needed(cmd);
-	restore_redirections(saved_stdout);
+	restore_redirections(saved_stdout, saved_stdin);
 	return (status);
 }

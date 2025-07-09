@@ -1,7 +1,12 @@
 
 #include "minishell.h"
 
-int g_exit_status = 0;
+t_shell_state g_shell = {
+	.exit_status = 0,
+	.sigint_received = 0,
+	.in_heredoc = 0
+};
+
 int	main(int argc, char **argv, char **envp)
 {
 	char		*input;
@@ -15,15 +20,20 @@ int	main(int argc, char **argv, char **envp)
 	while (1)
 	{
 		handle_signals();
-		input = readline("\001\033[1;31m\002minishell:$ \001\033[0m\002");
+		input = readline("\001\033[1;34m\002minishell:$ \001\033[0m\002");
 		if (!input)
 		{
 			write(1, "exit\n", ft_strlen("exit\n"));
 			break ;
 		}
+		if (*input == '\0')
+		{
+			free(input);
+			continue ;
+		}
 		if (*input)
 			add_history(input);
-		cmds = parsing(input, envir, &g_exit_status);
+		cmds = parsing(input, envir, &g_shell.exit_status);
 		if (!cmds || !cmds->head)
 		{
 			free(input);
@@ -35,16 +45,16 @@ int	main(int argc, char **argv, char **envp)
 		{
 			cmd->env = &envir;
 			cmd->envp = env_char;
-			cmd->exit_status = &g_exit_status;
+			cmd->exit_status = &g_shell.exit_status;
 			cmd = cmd->next;
 		}
 		cmd = cmds->head;
 		if (cmd && cmd->next == NULL && is_builtin(cmd->args[0]))
-			g_exit_status = execute_builtin(cmd);
+			g_shell.exit_status = execute_builtin(cmd);
 		else
 			execute_pipeline(cmd);
 		free_all(cmds->k);
 		free(input);
 	}
-	return (g_exit_status);
+	return (g_shell.exit_status);
 }

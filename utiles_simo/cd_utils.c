@@ -32,7 +32,10 @@ char *get_value(t_env *env, char *key)
 	t_env	*curr;
 
 	if (!env)
-		ft_printf(STDERR_FILENO, "no environement");
+	{
+		ft_printf(STDERR_FILENO, "no environement + we aren't supposed to handle this.\n");
+		return (NULL);
+	}	
 	if (!key)
 		return (NULL);
 	curr = env;
@@ -79,7 +82,7 @@ char *cd_to_path(t_cmd *cmd, char *oldpwd)
 	if (!target || chdir(target) == -1)
 	{
 		if (!cmd->args[1] )
-			ft_printf(2, "bash: cd: HOME not set\n");
+			ft_printf(2, "minishell: cd: HOME not set\n");
 		else
 			ft_printf(STDERR_FILENO, "minishell: cd: %s: %s\n", cmd->args[1], strerror(errno));
 		free(oldpwd);
