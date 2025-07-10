@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: feedback <feedback@student.42.fr>          +#+  +:+       +#+        */
+/*   By: med <med@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/30 14:38:27 by mlakhdar          #+#    #+#             */
-/*   Updated: 2025/07/09 18:44:28 by feedback         ###   ########.fr       */
+/*   Updated: 2025/07/10 11:57:56 by med              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ typedef struct s_shell_state
 	int					exit_status;
 	int					sigint_received;
 	int					in_heredoc;
-	int					is_interactive;
+	int 				child_running;
 }						t_shell_state;
 extern t_shell_state	g_shell;
 

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   fork_process.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: feedback <feedback@student.42.fr>          +#+  +:+       +#+        */
+/*   By: med <med@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/09 18:52:31 by feedback          #+#    #+#             */
-/*   Updated: 2025/07/09 18:54:25 by feedback         ###   ########.fr       */
+/*   Updated: 2025/07/10 12:00:45 by med              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,6 +76,7 @@ void	execute_pipeline(t_cmd *cmd)
 	int		prev_fd[2];
 	int		status;
 	t_cmd	*tmp;
+	int sig;
 
 	prev_fd[0] = -1;
 	prev_fd[1] = -1;
@@ -87,11 +88,16 @@ void	execute_pipeline(t_cmd *cmd)
 		fork_and_execute(tmp, prev_fd);
 		tmp = tmp->next;
 	}
+	handle_signals();
 	while (wait(&status) > 0)
 	{
 		if (WIFEXITED(status))
 			g_shell.exit_status = WEXITSTATUS(status);
 		else if (WIFSIGNALED(status))
-			g_shell.exit_status = 128 + WTERMSIG(status);
+		{	
+			sig = WTERMSIG(status);
+			if (sig == SIGINT)
+				write(1, "\n", 1);
+		}
 	}
 }
