@@ -3,20 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mlakhdar <mlakhdar@student.42.fr>          +#+  +:+       +#+        */
+/*   By: feedback <feedback@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/09 18:58:35 by feedback          #+#    #+#             */
-/*   Updated: 2025/07/11 20:43:13 by mlakhdar         ###   ########.fr       */
+/*   Updated: 2025/07/11 23:47:35 by feedback         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
 t_shell_state g_shell = {.exit_status = 0, .sigint_received = 0, .in_heredoc = 0, .child_running = 0};
-
-// Assume these types and functions are defined elsewhere:
-// t_env, t_lst_cmd, t_cmd, g_shell, get_env, handle_signals, parsing,
-// env_tochar, is_builtin, execute_builtin, execute_pipeline, free_all
 
 static void handle_input_signals(void)
 {
