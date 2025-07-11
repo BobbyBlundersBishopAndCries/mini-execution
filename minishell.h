@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: med <med@student.42.fr>                    +#+  +:+       +#+        */
+/*   By: mlakhdar <mlakhdar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/30 14:38:27 by mlakhdar          #+#    #+#             */
-/*   Updated: 2025/07/10 11:57:56 by med              ###   ########.fr       */
+/*   Updated: 2025/07/11 13:43:46 by mlakhdar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,6 +79,7 @@ typedef struct s_redir
 {
 	char				*files;
 	t_redirct			index;
+	bool deja_quoted ;
 	int					fd;
 	struct s_redir		*next;
 }						t_redir;
@@ -117,7 +118,8 @@ typedef struct s_token
 {
 	char				*token;
 	t_type				type;
-	struct s_token		*next;
+	bool deja_quoted;
+	struct s_token *next;
 }						t_token;
 
 typedef struct s_lst_token
@@ -267,7 +269,7 @@ int						open_file(t_redir *redir, t_redirct mode);
 int						redirect_fd(int fd, int std_fd);
 int						setup_redirections(t_redir *list);
 int						handle_all_heredocs(t_cmd *cmd);
-int						handle_heredoc(t_redir *redir);
+int						handle_heredoc(t_redir *redir, t_env *env);
 void					close_redirs(t_redir *list);
 /* execute command */
 int						exec_error_status(int err);

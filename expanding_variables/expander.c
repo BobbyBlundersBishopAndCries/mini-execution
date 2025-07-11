@@ -6,7 +6,7 @@
 /*   By: feedback <feedback@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/30 14:07:48 by mlakhdar          #+#    #+#             */
-/*   Updated: 2025/07/09 18:22:52 by feedback         ###   ########.fr       */
+/*   Updated: 2025/07/11 11:35:31 by feedback         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,7 +76,45 @@ char	*string_expander(char *str, t_lst_hk *x, t_type a, t_env *env, int g_es)
 	}
 	return (q.res);
 }
+void check_if_heredocquoted(t_lst_token *token)
+{
+	t_lst_token *tmp;
+	t_token *m;
+	t_token *curr;
+	t_token *prev;
 
+	curr = NULL;
+	prev = NULL;
+	tmp = token;
+	curr = tmp->head;
+	prev = curr;
+	curr = curr->next;
+	m = tmp->head;
+	while(m)
+	{
+		m->deja_quoted = false;
+		m = m->next;
+	}
+	while (curr)
+	{
+		if (is_redir(prev))
+		{
+			char *t = curr->token;
+			int size = 0;
+			while(t[size])
+			{
+				if(t[size] == '\'' || t[size] == '"')
+				{
+					curr->deja_quoted = true;
+					break;
+				}
+				size++;
+			}
+		}
+		prev = curr;
+		curr = curr->next;
+	}
+}
 void	expander(t_lst_token *token, t_lst_hk *x, t_env *env, int g_es)
 {
 	t_token	*curr;
@@ -86,6 +124,7 @@ void	expander(t_lst_token *token, t_lst_hk *x, t_env *env, int g_es)
 	curr = token->head;
 	prev = NULL;
 	raw = NULL;
+	check_if_heredocquoted(token);
 	while (curr)
 	{
 		raw = curr->token;

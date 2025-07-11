@@ -6,7 +6,7 @@
 /*   By: feedback <feedback@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/09 18:26:56 by feedback          #+#    #+#             */
-/*   Updated: 2025/07/09 18:43:51 by feedback         ###   ########.fr       */
+/*   Updated: 2025/07/11 11:38:22 by feedback         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,6 +45,7 @@ t_redir	*add_in_file(t_token *redir, t_token *file, t_redir *head, t_lst_hk *x)
 	else if (redir->type == HEREDOC)
 		r->index = R_HEREDOC;
 	r->next = NULL;
+	r->deja_quoted = file->deja_quoted;
 	if (!head)
 		head = r;
 	else
