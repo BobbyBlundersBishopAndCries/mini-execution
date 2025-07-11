@@ -6,104 +6,93 @@
 /*   By: mlakhdar <mlakhdar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/07 17:29:43 by mohabid           #+#    #+#             */
-/*   Updated: 2025/07/11 14:57:07 by mlakhdar         ###   ########.fr       */
+/*   Updated: 2025/07/11 18:50:36 by mlakhdar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-static  char *get_word(char *word , int size)
+static char *get_word(const char *src, int size)
 {
-	char *w;
-	w = malloc(sizeof(char) * (size + 1));
-	int i = 0;
-	while(i < size)
-	{
-		w[i] = word[i];
-		i++;
-	}
-	w[i] = '\0';
-	return w;
+	char *word = malloc(size + 1);
+	if (!word)
+		return NULL;
+	strncpy(word, src, size);
+	word[size] = '\0';
+	return word;
 }
 
-char *expand_line(char *line , t_env *env)
+static char *find_env_value(t_env *env, const char *key)
 {
-	char *value;
-	char *line_ex;
-	line_ex = NULL;
-	char *t;
-	t = NULL;
-	t_env *etmp;
-	value = NULL;
-	etmp = NULL;
-	// two portions ( even a key for a value or a normal words are in the line )
-	for (int i = 0; line[i]; i++)
+	while (env)
 	{
-		if(i[line] == '$')
+		if (strcmp(env->key, key) == 0)
+			return env->value;
+		env = env->next;
+	}
+	return NULL;
+}
+
+char *expand_line(const char *line, t_env *env)
+{
+    char *line_ex = ft_strdup("");
+		int i = 0;
+		char *status;
+		char *tmp;
+		int key_len;
+		char *key;
+		char *value;
+		int w_len;
+		char *word;
+		
+		while (line[i])
 		{
-			i++;
-			int key = 0;
-			while(line[key + i] && ft_isalnum(line[key+i]))
-				key++;
-			if(key > 0)	
+			if (line[i] == '$')
 			{
-				t = get_word(line + i, key);
-				etmp = env;
-				while(etmp)
+				i++;
+				if (line[i] == '?')
 				{
-					if(ft_strcmp(t,  etmp->key) ==0)
-					{
-						value = etmp->value;
-						break;
-					}
-					etmp = etmp->next;
+					status = ft_itoa(g_shell.exit_status);
+					tmp = ft_strjoin(line_ex, status);
+					free(line_ex);
+					line_ex = tmp;
+					free(status);
+					i++;
 				}
-				if(!etmp && value == NULL)
-					value = ft_strdup("");
-				line_ex = ft_strjoin(line_ex, value);
-				i += key;
+				else if (isalpha(line[i]) || line[i] == '_')
+				{
+					key_len = 0;
+					while (isalnum(line[i + key_len]) || line[i + key_len] == '_')
+						key_len++;
+					key = get_word(line + i, key_len);
+					value = find_env_value(env, key);
+					tmp = ft_strjoin(line_ex, value ? value : "");
+					free(line_ex);
+					line_ex = tmp;
+					free(key);
+					i += key_len;
+				}
+				else
+				{
+					tmp = ft_strjoin(line_ex, "$");
+					free(line_ex);
+					line_ex = tmp;
+				}
 			}
 			else
 			{
-				if(line[i + key] || line[i+key] != '\'' || line[i +  key] != '"'  || line[i+key] != '?')
-				{
-					t = get_word(line - 1 + key, 2);
-					etmp = env;
-					while(etmp)
-					{
-						if(ft_strcmp(t , etmp->key) == 0)
-						{
-							value = etmp->value;
-							break;
-						}
-						etmp = etmp->next;
-					}
-					if(ft_strcmp(t , "?"))
-						value = ft_itoa(g_shell.exit_status);
-					i += 2;
-				}
-				else
-					value = ft_strdup("$");
-				line_ex = ft_strjoin(line_ex , value);
-				free(value);
+				w_len = 0;
+				while (line[i + w_len] && line[i + w_len] != '$')
+					w_len++;
+				word = get_word(line + i, w_len);
+				tmp = ft_strjoin(line_ex, word);
+				free(line_ex);
+				line_ex = tmp;
+				free(word);
+				i += w_len;
 			}
 		}
-		else
-		{
-			char *word;
-			word = NULL;
-			int w_len = 0;
-			while(line[i+ w_len] && line[i+ w_len] != '$')
-				w_len++;
-			word = get_word(line + i, w_len);
-			line_ex = ft_strjoin(line_ex, word);
-			free(word);
-			i += w_len;
-		}
-	}
-	if(line_ex[0] != '\0')
-		line_ex = ft_strjoin(line_ex , "\n");
-	return line_ex;
+    return line_ex;
 }
 
 static void	write_to_pipe_from_redir(t_redir *redir, int pipe_fd[2] , t_env *env)
